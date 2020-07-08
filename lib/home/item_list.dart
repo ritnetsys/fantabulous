@@ -16,12 +16,8 @@ class _ItemListViewState extends State<ItemListView> {
       margin: EdgeInsets.symmetric(vertical: 30),
       child: Column(
         children: [
-          Text(
-            'OUR PRODUCTS',
-            style: GoogleFonts.galada(color: Colors.green[800], fontSize: 24),
-          ),
-          Text(
-              'The best time to plant a tree was 20 years ago. The second best time is now.'),
+          Text('OUR PRODUCTS', style: GoogleFonts.galada(color: Colors.green[800], fontSize: 24)),
+          Text('The best time to plant a tree was 20 years ago. The second best time is now.'),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
             height: 450,
