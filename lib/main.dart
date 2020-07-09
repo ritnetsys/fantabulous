@@ -1,3 +1,4 @@
+import 'package:fantabulous/admin/admin_view.dart';
 import 'package:fantabulous/auth/auth_view.dart';
 import 'package:fantabulous/home/home_view.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/home', page: () => HomeView()),
         GetPage(name: '/login', page: () => AuthView()),
+        GetPage(name: '/admin', page: () => AdminView()),
       ],
       theme: ThemeData(
         primarySwatch: Colors.green,

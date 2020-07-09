@@ -1,5 +1,4 @@
 import 'package:fantabulous/auth.dart';
-import 'package:fantabulous/auth/auth_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,6 +30,7 @@ class _MenuViewState extends State<MenuView> {
     checkUser();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -45,43 +45,45 @@ class _MenuViewState extends State<MenuView> {
                   color: Colors.green[800], fontWeight: FontWeight.bold),
             )),
         FlatButton(
-            onPressed: () {},
+            onPressed: () {
+
+            },
             child: Text(
               'ABOUT',
               style: GoogleFonts.lato(
                   color: Colors.green[800], fontWeight: FontWeight.bold),
             )),
         FlatButton(
-            onPressed: () {},
+            onPressed: () {
+
+            },
             child: Text(
               'SHOP',
               style: GoogleFonts.lato(
                   color: Colors.green[800], fontWeight: FontWeight.bold),
             )),
         FlatButton(
-            onPressed: () {},
+            onPressed: () {
+
+            },
             child: Text(
               'CONTACT',
               style: GoogleFonts.lato(
                   color: Colors.green[800], fontWeight: FontWeight.bold),
             )),
-        loginState == 0 ?  Container(): loginState == 1 ? FlatButton(
+        FlatButton(
             onPressed: () {
-              Get.toNamed('/login');
+              if (loginState == 1) {
+                Get.toNamed('/login');
+              } else {
+                Get.toNamed('/admin');
+              }
             },
             child: Text(
-              'LOGIN',
+              loginState == 0 ? '' : loginState == 1 ? 'LOGIN' : 'MY ACCOUNT',
               style: GoogleFonts.lato(
                   color: Colors.green[800], fontWeight: FontWeight.bold),
-            )): FlatButton(
-            onPressed: () {
-              Get.toNamed('/admin');
-            },
-            child: Text(
-              'MY ACCOUNT',
-              style: GoogleFonts.lato(
-                  color: Colors.green[800], fontWeight: FontWeight.bold),
-            )),
+            ))
       ],
     );
   }
