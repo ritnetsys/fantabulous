@@ -13,7 +13,7 @@ class _MenuViewState extends State<MenuView> {
   int loginState = 0;
 
   checkUser() async {
-    FirebaseUser user = await auth.currentUser();
+    User user = auth.currentUser;
     if (user == null) {
       setState(() {
         loginState = 1;
@@ -38,7 +38,9 @@ class _MenuViewState extends State<MenuView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         FlatButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed('/');
+            },
             child: Text(
               'HOME',
               style: GoogleFonts.lato(

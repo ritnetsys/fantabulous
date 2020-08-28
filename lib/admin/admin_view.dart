@@ -1,9 +1,11 @@
-import 'dart:html';
+import 'dart:html' as html;
 import 'dart:typed_data';
 
+import 'package:fantabulous/database.dart';
 import 'package:fantabulous/defaults.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase/firebase.dart' as fb;
 
 class AdminView extends StatefulWidget {
   @override
@@ -16,24 +18,25 @@ class _AdminViewState extends State<AdminView> {
   int price = 0;
   String description = "";
   String category = "None";
+  bool inProgress = false;
 
-  submit() {}
-
+  double progressPercent = 0;
   Uint8List uploadedImage;
+  html.File uploadedImageFile;
 
   startFilePicker() async {
-    InputElement uploadInput = FileUploadInputElement();
+    html.InputElement uploadInput = html.FileUploadInputElement();
     uploadInput.click();
 
     uploadInput.onChange.listen((e) {
-      // read file content as dataURL
-      final files = uploadInput.files;
+      List<html.File> files = uploadInput.files;
       if (files.length == 1) {
-        final file = files[0];
-        FileReader reader = FileReader();
+        html.File file = files[0];
+        html.FileReader reader = html.FileReader();
 
         reader.onLoadEnd.listen((e) {
           setState(() {
+            uploadedImageFile = file;
             uploadedImage = reader.result;
           });
         });
@@ -45,13 +48,39 @@ class _AdminViewState extends State<AdminView> {
     });
   }
 
+  submit() {
+    setState(() {
+      inProgress = true;
+    });
+    final filePath = 'Products/images/${DateTime.now()}_1.png';
+    fb.StorageReference ref = fb.storage().refFromURL('gs://fantabulous-tree-store.appspot.com').child(filePath);
+
+    ref.put(uploadedImageFile).onStateChanged.listen((event) {
+      setState(() {
+        progressPercent = event != null ? (event.bytesTransferred / event.totalBytes * 100).toInt() : 0;
+      });
+    }).onDone(() async {
+      String url = (await ref.getDownloadURL()).toString();
+      Product product = Product();
+      product.home = false;
+      product.image = url;
+      product.name = name;
+      product.price = price.toString();
+      product.description = description;
+      product.category = category;
+      await addProduct(product);
+      setState(() {
+        inProgress = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[900],
       appBar: AppBar(
-        title: Text('Fantabulous Admin Panel',
-            style: GoogleFonts.galada(color: Colors.green[900], fontSize: 24)),
+        title: Text('Fantabulous Admin Panel', style: GoogleFonts.galada(color: Colors.green[900], fontSize: 24)),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -72,8 +101,7 @@ class _AdminViewState extends State<AdminView> {
                         padding: const EdgeInsets.all(30),
                         child: Text(
                           "Add New Product",
-                          style: GoogleFonts.galada(
-                              color: Colors.green[900], fontSize: 25),
+                          style: GoogleFonts.galada(color: Colors.green[900], fontSize: 25),
                         ),
                       ),
                       Row(
@@ -93,10 +121,16 @@ class _AdminViewState extends State<AdminView> {
                                         padding: const EdgeInsets.all(8),
                                         child: Row(
                                           children: [
-                                            Icon(Icons.image, color: Colors.green[900],),
+                                            Icon(
+                                              Icons.image,
+                                              color: Colors.green[900],
+                                            ),
                                             Padding(
                                               padding: EdgeInsets.only(left: 5),
-                                              child: Text('Select Image File'.toUpperCase(), style: TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold),),
+                                              child: Text(
+                                                'Select Image File'.toUpperCase(),
+                                                style: TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -112,11 +146,8 @@ class _AdminViewState extends State<AdminView> {
                                           name = value;
                                         });
                                       },
-                                      decoration:
-                                          InputDecoration(hintText: 'Name'),
-                                      validator: (value) => value.isEmpty
-                                          ? 'Name can\'t be empty!'
-                                          : null,
+                                      decoration: InputDecoration(hintText: 'Name'),
+                                      validator: (value) => value.isEmpty ? 'Name can\'t be empty!' : null,
                                     ),
                                   ),
                                   Padding(
@@ -130,11 +161,8 @@ class _AdminViewState extends State<AdminView> {
                                           description = value;
                                         });
                                       },
-                                      decoration: InputDecoration(
-                                          hintText: 'Description'),
-                                      validator: (value) => value.isEmpty
-                                          ? 'Description can\'t be empty!'
-                                          : null,
+                                      decoration: InputDecoration(hintText: 'Description'),
+                                      validator: (value) => value.isEmpty ? 'Description can\'t be empty!' : null,
                                     ),
                                   ),
                                   Padding(
@@ -148,11 +176,8 @@ class _AdminViewState extends State<AdminView> {
                                           price = int.parse(value);
                                         });
                                       },
-                                      decoration:
-                                          InputDecoration(hintText: 'Price'),
-                                      validator: (value) => value.isEmpty
-                                          ? 'Price can\'t be empty!'
-                                          : null,
+                                      decoration: InputDecoration(hintText: 'Price'),
+                                      validator: (value) => value.isEmpty ? 'Price can\'t be empty!' : null,
                                     ),
                                   ),
                                   Padding(
@@ -166,35 +191,29 @@ class _AdminViewState extends State<AdminView> {
                                           category = value;
                                         });
                                       },
-                                      decoration:
-                                          InputDecoration(hintText: 'Category'),
-                                      validator: (value) => value.isEmpty
-                                          ? 'Category can\'t be empty!'
-                                          : null,
+                                      decoration: InputDecoration(hintText: 'Category'),
+                                      validator: (value) => value.isEmpty ? 'Category can\'t be empty!' : null,
                                     ),
                                   ),
                                   Padding(
                                       padding: EdgeInsets.only(top: 45),
-                                      child: SizedBox(
-                                        height: 30,
-                                        child: RaisedButton(
-                                          elevation: 5,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          color: Colors.green[900],
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            child: Text('Save Product',
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                          ),
-                                          onPressed: () {
-                                            submit();
-                                          },
-                                        ),
-                                      ))
+                                      child: inProgress
+                                          ? Stack(children: [Align(alignment: Alignment.center, child: CircularProgressIndicator()), Align(alignment: Alignment.center, child: Text('$progressPercent%'))])
+                                          : SizedBox(
+                                              height: 30,
+                                              child: RaisedButton(
+                                                elevation: 5,
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                                color: Colors.green[900],
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                  child: Text('Save Product', style: TextStyle(color: Colors.white)),
+                                                ),
+                                                onPressed: () {
+                                                  submit();
+                                                },
+                                              ),
+                                            ))
                                 ],
                               ),
                             ),
@@ -203,8 +222,7 @@ class _AdminViewState extends State<AdminView> {
                               child: Container(
                             height: 450,
                             child: Center(
-                              child: ItemPreviewCard(name, description,
-                                  category, price, image, uploadedImage),
+                              child: ItemPreviewCard(name, description, category, price, image, uploadedImage),
                             ),
                           )),
                         ],
@@ -222,15 +240,14 @@ class _AdminViewState extends State<AdminView> {
 }
 
 class ItemPreviewCard extends StatelessWidget {
-  String name;
-  String image;
-  int price;
-  String description;
-  String category;
-  Uint8List uploadedImage;
+  final String name;
+  final String image;
+  final int price;
+  final String description;
+  final String category;
+  final Uint8List uploadedImage;
 
-  ItemPreviewCard(this.name, this.description, this.category, this.price,
-      this.image, this.uploadedImage);
+  ItemPreviewCard(this.name, this.description, this.category, this.price, this.image, this.uploadedImage);
 
   @override
   Widget build(BuildContext context) {
@@ -246,19 +263,14 @@ class ItemPreviewCard extends StatelessWidget {
             Expanded(
                 child: Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: uploadedImage == null
-                        ? NetworkImage(image)
-                        : MemoryImage(uploadedImage),
-                    fit: BoxFit.cover),
+                image: DecorationImage(image: uploadedImage == null ? NetworkImage(image) : MemoryImage(uploadedImage), fit: BoxFit.cover),
               ),
             )),
             Padding(
               padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
               child: Text(
                 name,
-                style: TextStyle(
-                    color: Colors.green[900], fontWeight: FontWeight.bold),
+                style: GoogleFonts.sourceSerifPro(color: Colors.green[900], fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
@@ -266,10 +278,7 @@ class ItemPreviewCard extends StatelessWidget {
               child: Chip(
                 label: Text(
                   category,
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green[900]),
+                  style: GoogleFonts.sourceSerifPro(fontSize: 10, color: Colors.green[900]),
                 ),
                 backgroundColor: Colors.green[200],
               ),
@@ -278,8 +287,14 @@ class ItemPreviewCard extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
               child: Text(
                 description,
-                style: TextStyle(
-                    color: Colors.green[900], fontWeight: FontWeight.bold),
+                style: GoogleFonts.sourceSerifPro(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: Text(
+                "₹$price",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
             Row(

@@ -13,11 +13,24 @@ class _ItemListViewState extends State<ItemListView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
+      margin: EdgeInsets.symmetric(vertical: 50),
       child: Column(
         children: [
-          Text('OUR PRODUCTS', style: GoogleFonts.galada(color: Colors.green[800], fontSize: 24)),
+          Text('OUR PRODUCTS', style: GoogleFonts.sourceSerifPro(color: Colors.green[800], fontSize: 24)),
           Text('The best time to plant a tree was 20 years ago. The second best time is now.'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: FlatButton(onPressed: () {}, hoverColor: Colors.green[100], child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Show All Products', style: GoogleFonts.sourceSerifPro(color: Colors.green[800]),),
+                  Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.navigate_next, color: Colors.green[800],),)
+                ],
+              ),
+            )),
+          ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
             height: 450,
@@ -30,11 +43,13 @@ class _ItemListViewState extends State<ItemListView> {
                       return ListView.builder(
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          DocumentSnapshot doc = snapshot.data.documents[index];
+                          DocumentSnapshot doc = snapshot.data.docs[index];
+                          Product product = Product.fromDocument(doc.id, doc.data());
                           return Card(
                             margin: EdgeInsets.all(20),
                             elevation: 5,
                             color: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                             child: Container(
                               width: calculateWidth(20),
                               child: Column(
@@ -43,32 +58,22 @@ class _ItemListViewState extends State<ItemListView> {
                                   Expanded(
                                       child: Container(
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image:
-                                              NetworkImage(doc.data['image']),
-                                          fit: BoxFit.cover),
+                                      image: DecorationImage(image: NetworkImage(product.image), fit: BoxFit.cover),
                                     ),
                                   )),
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                                     child: Text(
-                                      doc.data['name'],
-                                      style: TextStyle(
-                                          color: Colors.green[900],
-                                          fontWeight: FontWeight.bold),
+                                      product.name,
+                                      style: TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 0, 10, 10),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                                     child: Chip(
                                       label: Text(
-                                        doc.data['category'],
-                                        style:
-                                            TextStyle(
-                                              fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.green[900]),
+                                        product.category,
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.green[900]),
                                       ),
                                       backgroundColor: Colors.green[200],
                                     ),
@@ -76,10 +81,8 @@ class _ItemListViewState extends State<ItemListView> {
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                                     child: Text(
-                                      doc.data['description'],
-                                      style: TextStyle(
-                                          color: Colors.green[900],
-                                          fontWeight: FontWeight.bold),
+                                      product.description,
+                                      style: TextStyle(color: Colors.green[900], fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Row(
@@ -139,7 +142,7 @@ class _ItemListViewState extends State<ItemListView> {
                             ),
                           );
                         },
-                        itemCount: snapshot.data.documents.length,
+                        itemCount: snapshot.data.docs.length,
                         scrollDirection: Axis.horizontal,
                       );
                     } else {
