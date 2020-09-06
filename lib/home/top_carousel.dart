@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fantabulous/defaults.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,11 +12,11 @@ class CarouselView extends StatefulWidget {
 
 class _CarouselViewState extends State<CarouselView> {
   List<String> images = [
-    "assets/images/flower_tree.webp",
-    "assets/images/fruit_tree.webp",
-    "assets/images/home_decor.webp",
-    "assets/images/medicine_plant.webp",
-    "assets/images/much_more.webp",
+    "images/flower_tree.webp",
+    "images/fruit_tree.webp",
+    "images/home_decor.webp",
+    "images/medicine_plant.webp",
+    "images/much_more.webp",
   ];
   List<String> titles = [
     "Flower Trees",
@@ -57,25 +58,27 @@ class _CarouselViewState extends State<CarouselView> {
   Widget build(BuildContext context) {
     return Container(
       width: calculateWidth(100),
-      height: calculateHeight(70),
+      height: calculateHeight(isPotrait ? 40 : 70),
       child: Row(
         children: [
+          !kIsWeb
+              ? Container()
+              : Expanded(
+                  flex: isPotrait ? 1 : 2,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        prev();
+                      },
+                      child: Icon(
+                        Icons.arrow_left,
+                        size: 50,
+                        color: Colors.green[700],
+                      ),
+                    ),
+                  )),
           Expanded(
-              flex: 2,
-              child: Container(
-                child: GestureDetector(
-                  onTap: () {
-                    prev();
-                  },
-                  child: Icon(
-                    Icons.arrow_left,
-                    size: 50,
-                    color: Colors.green[700],
-                  ),
-                ),
-              )),
-          Expanded(
-              flex: 6,
+              flex: isPotrait ? 9 : 6,
               child: Container(
                 child: Card(
                   margin: EdgeInsets.all(20),
@@ -93,25 +96,28 @@ class _CarouselViewState extends State<CarouselView> {
                         child: Text(
                           titles[position],
                           style: GoogleFonts.galada(
-                              color: Colors.white, fontSize: 50),
+                              color: Colors.white,
+                              fontSize: isPotrait ? calculateWidth(6) : 50),
                         ),
                       )),
                 ),
               )),
-          Expanded(
-              flex: 2,
-              child: Container(
-                child: GestureDetector(
-                  onTap: () {
-                    next();
-                  },
-                  child: Icon(
-                    Icons.arrow_right,
-                    size: 50,
-                    color: Colors.green[700],
-                  ),
-                ),
-              ))
+          !kIsWeb
+              ? Container()
+              : Expanded(
+                  flex: isPotrait ? 1 : 2,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        next();
+                      },
+                      child: Icon(
+                        Icons.arrow_right,
+                        size: 50,
+                        color: Colors.green[700],
+                      ),
+                    ),
+                  ))
         ],
       ),
     );

@@ -9,38 +9,43 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="fantabulous">
+    <meta name="google-signin-client_id" content="904104247267-ilt2nf3mnrqtmp7i0h3s8emklmngd10d.apps.googleusercontent.com" />
     <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
-    <title>Fantabulous</title>
+    <title>Fantabulous Flower and Fruit Trees</title>
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-storage.js"></script>
 <script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyCVCxNAuoCOjHGW3OEGJfGu9mfRu5teyEc",
-    authDomain: "fantabulous-tree-store.firebaseapp.com",
-    databaseURL: "https://fantabulous-tree-store.firebaseio.com",
-    projectId: "fantabulous-tree-store",
-    storageBucket: "fantabulous-tree-store.appspot.com",
-    messagingSenderId: "904104247267",
-    appId: "1:904104247267:web:e049ae2befeae93f"
+    var firebaseConfig = {
+    apiKey: "AIzaSyCmKcTal_Te3hRSVs1pmiv3vHWMJ2cjkok",
+    authDomain: "fantabulous-trees.firebaseapp.com",
+    databaseURL: "https://fantabulous-trees.firebaseio.com",
+    projectId: "fantabulous-trees",
+    storageBucket: "fantabulous-trees.appspot.com",
+    messagingSenderId: "236370909920",
+    appId: "1:236370909920:web:4f2db5f3c842ece6218e85",
+    measurementId: "G-J1704Q2826"
   };
+  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
 </script>
 <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('flutter_service_worker.js');
+        navigator.serviceWorker.register('flutter_service_worker.js?version = 0.0.3');
       });
     }
-
 </script>
-<script src="main.dart.js" type="application/javascript"></script>
+<script src="main.dart.js?version = 0.0.3" type="application/javascript"></script>
 </body>
 </html>

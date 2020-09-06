@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "904104247267",
+    "firebase_url": "https://fantabulous-tree-store.firebaseio.com",
+    "project_id": "fantabulous-tree-store",
+    "storage_bucket": "fantabulous-tree-store.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904104247267:android:bfcb5474903dd2f4946ad6",
+        "android_client_info": {
+          "package_name": "com.fantabulousflowerfruittrees.fantabulous"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904104247267-ilt2nf3mnrqtmp7i0h3s8emklmngd10d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUk9g80IvhVPpSBl_X4IGqrl31DxPrdRg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904104247267-ilt2nf3mnrqtmp7i0h3s8emklmngd10d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "904104247267-j1nt7dficok3njhbkp53upmn84cm2v7v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bcsofss.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
